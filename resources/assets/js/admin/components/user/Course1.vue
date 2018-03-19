@@ -12,7 +12,6 @@
 
             </el-table-column>
 
-
             <el-table-column
                     label="周一"
             >
@@ -179,9 +178,9 @@
                             <el-select v-model="editCourse.section_start"  placeholder="开始"  @change="startSectionChange(1)">
                                 <el-option :key="1" label="第1节" :value="1"></el-option>
                                 <el-option :key="3" label="第3节" :value="3"></el-option>
-                                <el-option :key="6" label="第6节" :value="6"></el-option>
-                                <el-option :key="8" label="第8节" :value="8"></el-option>
-                                <el-option :key="10" label="第10节" :value="10"></el-option>
+                                <el-option :key="5" label="第5节" :value="5"></el-option>
+                                <el-option :key="7" label="第7节" :value="7"></el-option>
+                                <el-option :key="9" label="第9节" :value="9"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -275,7 +274,7 @@
                     1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
                 ],
                 section_ends: [
-                    2,4,5,7,9,11,12
+                    2,4,6,8,10
                 ],
                 rules: {
                     name: [
@@ -311,8 +310,8 @@
             info(){
                 this.userCourse = [];
                 //设置课程表格
-                let sectionsName = ['第1-2节', '第3-4节', '第5节', '第6-7节', '第8-9节', '第10-11节', '第12节' ];
-                for(let i = 0; i < 7; i++){
+                let sectionsName = ['第1-2节', '第3-4节', '第5-6节', '第7-8节', '第9-10节'];
+                for(let i = 0; i < 5; i++){
                     this.userCourse[i] = {
                         section: sectionsName[i],
                         mon: [],
@@ -333,40 +332,8 @@
                         course: this.courseInfos[i],
                     };
                     for (let j = course.course.section_start; j <= course.course.section_end; j++){
-                        switch (j) {
-                            case 1:{
-                                this.userCourse[0][weekDay[course.course.week_day]].push(course);
-                                continue;
-                                break;
-                            }
-                            case 3:{
-                                this.userCourse[1][weekDay[course.course.week_day]].push(course);
-                                continue;
-                                break;
-                            }
-                            case 5:{
-                                this.userCourse[2][weekDay[course.course.week_day]].push(course);
-                                break;
-                            }
-                            case 6:{
-                                this.userCourse[3][weekDay[course.course.week_day]].push(course);
-                                continue;
-                                break;
-                            }
-                            case 8:{
-                                this.userCourse[4][weekDay[course.course.week_day]].push(course);
-                                continue;
-                                break;
-                            }
-                            case 10:{
-                                this.userCourse[5][weekDay[course.course.week_day]].push(course);
-                                continue;
-                                break;
-                            }
-                            case 12:{
-                                this.userCourse[6][weekDay[course.course.week_day]].push(course);
-                                break;
-                            }
+                        if((j+1)%2 === 0){
+                            this.userCourse[(j+1)/2-1][weekDay[course.course.week_day]].push(course);
                         }
                     }
                 }
@@ -382,7 +349,7 @@
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         console.log(this.editCourse);
-                        axios.post('/admin/teacher/course/edit',{
+                        axios.post('/admin/user/course/edit',{
                             user_id:    this.userId,
                             id:         this.editCourse.id,
                             name:       this.editCourse.name,
@@ -422,7 +389,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    axios.post('/admin/teacher/course/delete',{
+                    axios.post('/admin/user/course/delete',{
                         'user_id':  this.userId,
                         id:         id,
                     }).then(response => {

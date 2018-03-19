@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStaffroomsTable extends Migration
+class CreateUserCourseTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateStaffroomsTable extends Migration
      */
     public function up()
     {
-        Schema::create('staffrooms', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name', 20)->unique();
+        Schema::create('user_course', function (Blueprint $table) {
+            $table->increments('id')->comment('id');
+            $table->integer('user_id')->comment('用户id');
+            $table->integer('course_id')->comment('课程id');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ class CreateStaffroomsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('staffrooms');
+        Schema::dropIfExists('teacher_course');
     }
 }

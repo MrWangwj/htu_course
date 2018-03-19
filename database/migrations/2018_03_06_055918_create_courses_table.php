@@ -23,6 +23,7 @@ class CreateCoursesTable extends Migration
             $table->tinyInteger('week_day')->comment('星期');
             $table->tinyInteger('section_start')->comment('开始节');
             $table->tinyInteger('section_end')->comment('结束节');
+            $table->tinyInteger('term_id')->comment('学期_id');
             $table->timestamps();
         });
     }

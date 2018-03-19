@@ -6,44 +6,39 @@
  * Time: 下午2:36
  */
 
-Route::prefix('admin')->group(function (){
-    //用户登录
-    Route::get('/login',function (){
-        return view('admin.login');
-    });
-    Route::get('/login/validate', function () {
-        return captcha_src();
-    });
+Route::prefix('admin')->namespace('Admin')->group(function (){
+    //管理员登录
+    Route::get('/login',function (){return view('admin.login');});
+    //验证码
+    Route::get('/login/validate', function () {return captcha_src();});
 
-    Route::post('/login', 'Admin\LoginController@login');
-    Route::get('/logout', 'Admin\LoginController@logout');
+    Route::post('/login', 'AdminController@login');
+    Route::get('/logout', 'AdminController@logout');
 
-
-    //页面渲染
 
     Route::group(['middleware' => ['admin.login']], function (){
-        Route::get('/', function (){
-            return view('admin.index');
-        });
-
-        Route::get('/nodes','SettingController@nodes');
-
-        Route::prefix('teacher')->group(function (){
-            Route::get('/type', 'Admin\TeacherController@type');
-            Route::get('/data', 'Admin\TeacherController@data');
-            Route::post('/add', 'Admin\TeacherController@add');
-            Route::post('/edit', 'Admin\TeacherController@edit');
-            Route::post('/delete', 'Admin\TeacherController@delete');
+        //页面渲染
+        Route::get('/', function (){return view('admin.index');});
 
 
-            Route::post('/course/get', 'Admin\TeacherController@teacherCourses');
-            Route::post('/course/clear', 'Admin\TeacherController@clearCourse');
-            Route::post('/course/add', 'Admin\TeacherController@addCourse');
-            Route::post('/course/edit', 'Admin\TeacherController@editCourse');
-            Route::post('/course/delete', 'Admin\TeacherController@deleteCourse');
+
+        Route::prefix('user')->group(function (){
+            Route::get('/type', 'UserController@type');
+            Route::get('/data', 'UserController@data');
+
+            Route::post('/add', 'UserController@add');
+            Route::post('/edit', 'UserController@edit');
+            Route::post('/delete', 'UserController@delete');
+
+            Route::post('/course/get', 'CourseController@courses');
+            Route::post('/course/clear', 'CourseController@clearCourse');
+            Route::post('/course/add', 'CourseController@addCourse');
+            Route::post('/course/edit', 'CourseController@editCourse');
+            Route::post('/course/delete', 'CourseController@deleteCourse');
         });
 
     });
 
 
 });
+Route::get('/admin/nodes','SettingController@nodes');

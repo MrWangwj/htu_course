@@ -58,9 +58,9 @@
                             <el-select v-model="editCourse.section_start"  placeholder="开始"  @change="startSectionChange(1)">
                                 <el-option :key="1" label="第1节" :value="1"></el-option>
                                 <el-option :key="3" label="第3节" :value="3"></el-option>
-                                <el-option :key="6" label="第6节" :value="6"></el-option>
-                                <el-option :key="8" label="第8节" :value="8"></el-option>
-                                <el-option :key="10" label="第10节" :value="10"></el-option>
+                                <el-option :key="5" label="第5节" :value="5"></el-option>
+                                <el-option :key="7" label="第7节" :value="7"></el-option>
+                                <el-option :key="9" label="第9节" :value="9"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -154,7 +154,7 @@
                     1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
                 ],
                 section_ends: [
-                    2,4,5,7,9,11,12
+                    2,4,6,8,10
                 ],
 
                 rules: {
@@ -201,7 +201,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    axios.post('/admin/teacher/course/delete',{
+                    axios.post('/admin/user/course/delete',{
                         'user_id':  this.userId,
                         id:         row.id,
                     }).then(response => {
@@ -239,7 +239,7 @@
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         console.log(this.editCourse);
-                        axios.post('/admin/teacher/course/edit',{
+                        axios.post('/admin/user/course/edit',{
                             user_id:    this.userId,
                             id:         this.editCourse.id,
                             name:       this.editCourse.name,

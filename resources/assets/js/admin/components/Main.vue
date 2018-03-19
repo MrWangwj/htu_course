@@ -1,8 +1,6 @@
 <template>
     <div>
-        <group title="禁用内置验证及显示成功或者错误样式">
-            <x-input title="禁用验证" placeholder="I'm placeholder" novalidate :icon-type="iconType" :show-clear="false" @on-blur="onBlur" placeholder-align="right"></x-input>
-        </group>
+        <h1>欢迎使用课表管理系统</h1>
     </div>
 </template>
 <script>

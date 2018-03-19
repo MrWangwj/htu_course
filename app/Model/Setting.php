@@ -13,4 +13,11 @@ class Setting extends Model
         $week = ($nowTime - $startSchool) / (86400*7);
         return ceil($week) < 1 ? 1 : ceil($week);
     }
+
+    //获取当前学期id和
+    public static function getNowTerm(){
+        $value = self::where('key', 'term')->first()->value;
+        $term = Terms::select(['id', 'name', 'value'])->where('id', $value)->first();
+        return $term;
+    }
 }

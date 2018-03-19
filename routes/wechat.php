@@ -6,12 +6,11 @@
  * Time: 下午2:35
  */
 
-Route::prefix('/wechat')->group(function (){
+Route::prefix('/wechat')->namespace('Wechat')->group(function (){
     Route::get('/', function (){
         return view('wechat.index');
     });
 
-
-    Route::get('/teacher/type', 'Wechat\TeacherController@types');
-    Route::get('/course/count', 'Wechat\CourseController@count');
+    Route::get('/user/type', 'UserController@types');
+    Route::get('/course/count', 'CourseController@count');
 });

@@ -77,44 +77,24 @@
         <div v-transfer-dom>
             <popup v-model="count" position="right">
                 <div style="width:330px;">
-                    <divider>教研室</divider>
+                    <divider>专业</divider>
                     <checker
-                            v-model="set.selStaffrooms"
+                            v-model="set.selMajors"
                             type="checkbox"
                             default-item-class="group-item"
                             selected-item-class="group-item-selected"
-                            @on-change="getSelStudents">
-                        <checker-item v-for="i in get.staffrooms" :key="i.id" :value="i.id" class="group-item">{{ i.name }}</checker-item>
+                            @on-change="getSelUsers">
+                        <checker-item v-for="i in get.majors" :key="i.id" :value="i.id" class="group-item">{{ i.name }}</checker-item>
                     </checker>
 
-                    <divider>职务级别</divider>
+                    <divider>年级</divider>
                     <checker
-                            v-model="set.selJoblevels"
+                            v-model="set.selGrades"
                             type="checkbox"
                             default-item-class="group-item"
                             selected-item-class="group-item-selected"
-                            @on-change="getSelStudents">
-                        <checker-item v-for="i in get.joblevels" :key="i.id" :value="i.id" class="group-item">{{ i.name }}</checker-item>
-                    </checker>
-
-                    <divider>职务类型</divider>
-                    <checker
-                            v-model="set.selJobtypes"
-                            type="checkbox"
-                            default-item-class="group-item"
-                            selected-item-class="group-item-selected"
-                            @on-change="getSelStudents">
-                        <checker-item v-for="i in get.jobtypes" :key="i.id" :value="i.id" class="group-item">{{ i.name }}</checker-item>
-                    </checker>
-
-                    <divider>职称</divider>
-                    <checker
-                            v-model="set.selTitles"
-                            type="checkbox"
-                            default-item-class="group-item"
-                            selected-item-class="group-item-selected"
-                            @on-change="getSelStudents">
-                        <checker-item v-for="i in get.titles" :key="i.id" :value="i.id" class="group-item">{{ i.name }}</checker-item>
+                            @on-change="getSelUsers">
+                        <checker-item v-for="i in get.grades" :key="i" :value="i" class="group-item">{{ i }}</checker-item>
                     </checker>
 
                     <divider>性别</divider>
@@ -123,13 +103,13 @@
                             type="checkbox"
                             default-item-class="group-item"
                             selected-item-class="group-item-selected"
-                            @on-change="getSelStudents">
+                            @on-change="getSelUsers">
                         <checker-item :key="0" :value="'男'" class="group-item">男</checker-item>
                         <checker-item :key="1" :value="'女'" class="group-item">女</checker-item>
                     </checker>
 
                     <divider>----</divider>
-                    <x-button style="background-color:#ff4a00;color: white;"  @click.native="selStuBut">高级筛选</x-button>
+                    <x-button style="background-color:#ff4a00;color: white;"  @click.native="selUserBut">高级筛选</x-button>
                 </div>
             </popup>
         </div>
@@ -147,8 +127,8 @@
                             <label :style="{backgroundColor: colors[colorIndex[i]].title}">{{ section.id }}</label>
                         </div>
                         <div>
-                            <label :class="{'sel-user': stu.id === selUserId}" v-for="(stu,index) in section.stus"
-                                   @click="courseInfo(stu.id, stu.courseInfo)">{{ stu.name }},</label>
+                            <label :class="{'sel-user': user.id === selUserId}" v-for="(user,index) in section.users"
+                                   @click="courseInfo(user.id, user.courseInfo)">{{ user.name }},</label>
                         </div>
                     </div>
                 </div>
@@ -172,10 +152,10 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="i in 7">
+                <tr v-for="i in 5">
                     <td>{{ (courses.hasOwnProperty(i-1)&&courses[i- 1].hasOwnProperty(0)&&courses[i - 1][0].hasOwnProperty('id')) ? courses[0][i-1].id : 0 }}节</td>
                     <td v-for="j in 7" @click="selTd(j-1, i-1)">
-                        {{ (courses.hasOwnProperty(j-1)&&courses[j - 1].hasOwnProperty(i-1)&&courses[j - 1][i - 1].hasOwnProperty('stus')) ? courses[j - 1][i - 1].stus.length : 0 }}
+                        {{ (courses.hasOwnProperty(j-1)&&courses[j - 1].hasOwnProperty(i-1)&&courses[j - 1][i - 1].hasOwnProperty('users')) ? courses[j - 1][i - 1].users.length : 0 }}
                     </td>
                 </tr>
                 </tbody>
@@ -196,9 +176,9 @@
                                 </p>
                             </div>
                             <div class="label-stu">
-                                <label :class="{'sel-user': stu.id === selUserId}"
-                                       v-for="(stu,index) in (courses.hasOwnProperty(type2Data.x) && courses[type2Data.x].hasOwnProperty(type2Data.y) && courses[type2Data.x][type2Data.y].hasOwnProperty('stus'))?courses[type2Data.x][type2Data.y].stus:[]"
-                                       @click="courseInfo(stu.id, stu.courseInfo)">{{ stu.name }},</label>
+                                <label :class="{'sel-user': user.id === selUserId}"
+                                       v-for="(user,index) in (courses.hasOwnProperty(type2Data.x) && courses[type2Data.x].hasOwnProperty(type2Data.y) && courses[type2Data.x][type2Data.y].hasOwnProperty('users'))?courses[type2Data.x][type2Data.y].users:[]"
+                                       @click="courseInfo(user.id, user.courseInfo)">{{ user.name }},</label>
                             </div>
                         </div>
                     </div>
@@ -211,28 +191,28 @@
 
 
         <div v-transfer-dom>
-            <x-dialog v-model="selTeacher.showHideOnBlur" class="dialog-demo" hide-on-blur>
+            <x-dialog v-model="selUser.showHideOnBlur" class="dialog-demo" hide-on-blur>
                 <div class="img-box">
                     <div style=" margin: 10px auto;height:330px; text-align: center; ;position: relative;">
                         <div style="width: 100%;height: 40px; line-height: 40px;top: 0;position: absolute;background-color: white;">
                             <p>
-                                人员选择<check-icon :value.sync="selTeacher.allType" @click.native="selAllStu">全选</check-icon>
+                                人员选择<check-icon :value.sync="selUser.allType" @click.native="selAllStu">全选</check-icon>
                             </p>
                         </div>
                         <div style="padding-top: 40px;overflow: scroll;height: 300px;">
                             <checker
-                                    v-model="selTeacher.teachers"
+                                    v-model="selUser.users"
                                     type="checkbox"
                                     default-item-class="group-item"
                                     selected-item-class="group-item-selected"
-                                    @on-change="selStuFun"
+                                    @on-change="selUserFun"
                             >
-                                <checker-item v-for="(v,i) in get.teachers" :key="i" :value="i" class="group-item">{{ v.name }}</checker-item>
+                                <checker-item v-for="(v,i) in get.users" :key="i" :value="i" class="group-item">{{ v.name }}</checker-item>
                             </checker>
                         </div>
                     </div>
                 </div>
-                <div @click="selTeacher.showHideOnBlur=false">
+                <div @click="selUser.showHideOnBlur=false">
                     <span class="vux-close"></span>
                 </div>
             </x-dialog>
@@ -284,20 +264,16 @@
             return {
                 get: {
                     nowWeek: 0,     //当前周
-                    joblevels: [],  //职务级别
-                    jobtypes: [],   //职务类型
-                    staffrooms: [], //教研室
-                    titles: [],     //职称
-                    teachers: [],   //教师
+                    majors: [],  //专业
+                    grades: [], //年级
+                    users: [],   //用户
                 },
                 set: {
                     weeks: [],          //一共有多少周
-                    selJoblevels: [],   //选中的职务级别
+                    selMajors: [],   //选中的专业
                     selSexs: [],        //选中的性别
-                    selJobtypes: [],    //选中的职务类型
-                    selStaffrooms: [],  //选中的教研室
-                    selTitles:[],       //选中的职称
-                    selTeachers: [],    //选中的教师
+                    selUsers: [],    //选中的教师
+                    selGrades:[],
                     selWeek: 1,         //选中的周
                 },
                 count: false,           //是否打开统计页面
@@ -316,7 +292,6 @@
                 noCourses: [],      // 无课人员信息表
                 test: true,
                 colorIndex: [0, 1, 2, 3, 4, 5, 6],
-
                 type2Data: {
                     showHideOnBlur: false,
                     title: '',
@@ -354,11 +329,10 @@
                         content: '#FCC5CC',
                     },
                 ],
-                selTeacherId: 0,
-                selTeacher:{
+                selUser:{
                     showHideOnBlur:false,
                     allType: false,
-                    teachers:[],
+                    users:[],
                 },
                 selUserId: 0,
             }
@@ -373,22 +347,19 @@
                     text: '正在加载数据',
                 });
 
-                axios.get('/wechat/teacher/type').then(res => {
+                axios.get('/wechat/user/type').then(res => {
                     let data = res.data;
-                    this.get.joblevels = data.joblevels;
-                    this.get.jobtypes = data.jobtypes;
-                    this.get.staffrooms = data.staffrooms;
-                    this.get.titles = data.titles;
+                    this.get.majors = data.majors;
                 });
-
 
                 axios.get('/wechat/course/count').then(response => {
                     //设置数据
                     let data = response.data;
                     this.get.nowWeek = data.nowWeek;        //当前周
-                    this.get.teachers = data.teachers;      //教师
+                    this.get.users = data.users;      //用户
+                    this.get.grades = data.grades;  //年级
 
-                    // console.log(data.teachers);
+                    // console.log(data.users);
                     if (this.get.nowWeek > 20) maxWeek = this.get.nowWeek;   //判断若用户大于20周，则以当前为最大
                     for (let i = 1; i <= maxWeek; i++) {
                         this.set.weeks.push({
@@ -402,7 +373,7 @@
                     let nowWeekDay = (new Date().getDay() + 6) % 7;
                     this.$children[2].goSlide(nowWeekDay);
 
-                    this.getSelStudents();
+                    this.getSelUsers();
                     this.$vux.loading.hide();
 
                 });
@@ -437,142 +408,114 @@
             },
 
             //获取当前选择的用户
-            getSelStudents() {
-                this.set.selTeachers = [];
-                this.selTeacher.teachers = [];
+            getSelUsers() {
+                this.set.selUsers = [];
+                this.selUser.users = [];
 
-                let all = this.get.teachers,
-                    staffrooms = this.set.selStaffrooms,
-                    joblevels = this.set.selJoblevels,
-                    jobtypes = this.set.selJobtypes,
-                    titles = this.set.selTitles,
-                    sexs = this.set.selSexs;
+                let all = this.get.users,
+                    majors = this.set.selMajors,
+                    sexs = this.set.selSexs,
+                    grades = this.set.selGrades;
 
                 //当用户没有选择条件是默认为全部人员
-                if (staffrooms.length === 0 && joblevels.length === 0 && sexs.length === 0 && jobtypes.length === 0 && titles.length === 0) {
+                if (majors.length === 0 && grades.length === 0 && sexs.length === 0 ) {
                     for (let index in all) {
-                        this.set.selTeachers.push({
+                        this.set.selUsers.push({
                             id: index,
                             name: all[index].name,
                         });
                     }
                 } else {
                     for (let index in all) {
-                        if ((!staffrooms.length || staffrooms.indexOf(all[index].staffroom_id) !== -1) &&
-                            (!sexs.length || sexs.indexOf(all[index].sex) !== -1) &&
-                            (!joblevels.length || joblevels.indexOf(all[index].joblevel_id)!== -1) &&
-                            (!jobtypes.length || jobtypes.indexOf(all[index].jobtype_id) !== -1) &&
-                            (!titles.length || titles.indexOf(all[index].title_id) !== -1)){  //判断用户是否符合选择的条件
 
-                            this.set.selTeachers.push({
+                        if ((!majors.length || majors.indexOf(all[index].major_id) !== -1) &&
+                            (!sexs.length || sexs.indexOf(all[index].sex) !== -1) &&
+                            (!grades.length || grades.indexOf(parseInt(all[index].account.substring(0, 2)))!== -1)){  //判断用户是否符合选择的条件
+
+                            this.set.selUsers.push({
                                 id: index,
                                 name: all[index].name,
                             });
-                            this.selTeacher.teachers.push(index);
+                            this.selUser.users.push(index);
                         }
                     }
                 }
 
-                console.log(this.set.selTeachers);
+
+
                 this.getCourses();
             },
 
             getCourses() {
+                // console.log(this.set.selUsers);
                 this.haveCourses = [];
                 this.noCourses = [];
                 for (let i = 0; i < 7; i++) {
                     this.haveCourses[i] = [
-                        {id: '1-2', stus: [],},
-                        {id: '3-4', stus: [],},
-                        {id: '5', stus: [],},
-                        {id: '6-7', stus: [],},
-                        {id: '8-9', stus: [],},
-                        {id: '10-11', stus: [],},
-                        {id: '12', stus: [],},
+                        {id: '1-2', users: [],},
+                        {id: '3-4', users: [],},
+                        {id: '5-6', users: [],},
+                        {id: '7-8', users: [],},
+                        {id: '9-10', users: [],},
                     ];
 
                     this.noCourses[i] = [
-                        {id: '1-2', stus: [],},
-                        {id: '3-4', stus: [],},
-                        {id: '5', stus: [],},
-                        {id: '6-7', stus: [],},
-                        {id: '8-9', stus: [],},
-                        {id: '10-11', stus: [],},
-                        {id: '12', stus: [],},
+                        {id: '1-2', users: [],},
+                        {id: '3-4', users: [],},
+                        {id: '5-6', users: [],},
+                        {id: '7-8', users: [],},
+                        {id: '9-10', users: [],},
                     ];
                 }
 
 
-                let all = this.get.teachers,        //所有用户信息
-                    selTeachers = this.set.selTeachers,   //选中的用户信息
+                let all = this.get.users,        //所有用户信息
+                    selUsers = this.set.selUsers,   //选中的用户信息
                     selWeek = this.set.selWeek;     //选中的周
 
 
-                for (let index in selTeachers){
-                    for (let courseIndex in all[selTeachers[index].id].courses){
-                        let tmpCourse = all[selTeachers[index].id].courses[courseIndex];
+                for (let index in selUsers){
+
+                    for (let courseIndex in all[selUsers[index].id].courses){
+                        let tmpCourse = all[selUsers[index].id].courses[courseIndex];
+
                         if((tmpCourse.week_start <= selWeek && selWeek <= tmpCourse.week_end) && (tmpCourse.week_type === 0 || selWeek%2 === tmpCourse.week_type%2)){
+
+
                             for (let n = tmpCourse.section_start; n <= tmpCourse.section_end; n++){
-                                let sectionNum = -1;
-                                switch (n) {
-                                    case 1:
-                                        sectionNum = 0;
-                                        break;
-                                    case 3:
-                                        sectionNum = 1;
-                                        break;
-                                    case 5:
-                                        sectionNum = 2;
-                                        break;
-                                    case 6:
-                                        sectionNum = 3;
-                                        break;
-                                    case 8:
-                                        sectionNum = 4;
-                                        break;
-                                    case 10:
-                                        sectionNum = 5;
-                                        break;
-                                    case 12:
-                                        sectionNum = 6;
-                                        break;
-                                }
-                                if(sectionNum !== -1){
-                                    this.haveCourses[tmpCourse.week_day-1][sectionNum].stus.push({
-                                        id: selTeachers[index].id,
-                                        name: selTeachers[index].name,
+
+                                if(n%2 === 1)
+                                    this.haveCourses[tmpCourse.week_day-1][(n+1)/2-1].users.push({
+                                        id: selUsers[index].id,
+                                        name: selUsers[index].name,
                                         courseInfo: tmpCourse.name+'/'+tmpCourse.location,
                                     });
-                                    if(!( sectionNum === 5 || sectionNum === 12))
-                                        continue;
-                                }
                             }
                         }
                     }
                 }
 
-                // console.log(this.haveCourses);
+
 
                 // 获取用户无课人员信息
-
                 for (let i = 0; i < 7; i++) {
-                    for (let j = 0; j < 7; j++) {
-                        let tmpTeachers2 = this.haveCourses[i][j].stus;
+                    for (let j = 0; j < this.haveCourses[i].length; j++) {
+                        let tmpUsers2 = this.haveCourses[i][j].users;
 
-                        for (let index in selTeachers) {
-                            let id = selTeachers[index].id;
+                        for (let index in selUsers) {
+                            let id = selUsers[index].id;
                             let status = false;
-                            for (let index2 in tmpTeachers2) {
-                                if (id === tmpTeachers2[index2].id) {
+                            for (let index2 in tmpUsers2) {
+                                if (id === tmpUsers2[index2].id) {
                                     status = true;
                                     break;
                                 }
                             }
 
                             if (!status) {
-                                this.noCourses[i][j].stus.push({
-                                    id: selTeachers[index].id,
-                                    name: selTeachers[index].name,
+                                this.noCourses[i][j].users.push({
+                                    id: selUsers[index].id,
+                                    name: selUsers[index].name,
                                     courseInfo: '',
                                 });
                             }
@@ -580,8 +523,7 @@
                     }
                 }
 
-
-
+                // console.log(this.noCourses);
                 this.haveNoCourseFun(false);
             },
 
@@ -608,21 +550,21 @@
             },
 
             //单击选择人员按钮
-            selStuBut(){
+            selUserBut(){
                 this.count = false;
-                this.selTeacher.showHideOnBlur = true;
+                this.selUser.showHideOnBlur = true;
             },
 
             //选择人员
-            selStuFun(){
-                if(this.selTeacher.showHideOnBlur){
-                    this.set.selTeachers = [];
+            selUserFun(){
+                if(this.selUser.showHideOnBlur){
+                    this.set.selUsers = [];
 
-                    for( let i in this.selTeacher.teachers){
-                        let id = this.selTeacher.teachers[i];
-                        this.set.selTeachers.push({
+                    for( let i in this.selUser.users){
+                        let id = this.selUser.users[i];
+                        this.set.selUsers.push({
                             id: id,
-                            name: this.get.teachers[id].name,
+                            name: this.get.users[id].name,
                         });
                     }
                     this.getCourses();
@@ -630,15 +572,15 @@
             },
 
             selAllStu(){
-                this.set.selTeachers = [];
-                this.selTeacher.teachers = [];
-                for( let i in this.get.teachers){
-                    this.set.selTeachers.push({
+                this.set.selUsers = [];
+                this.selUser.users = [];
+                for( let i in this.get.usres){
+                    this.set.selUsers.push({
                         id: i,
-                        name: this.get.teachers[i].name,
+                        name: this.get.users[i].name,
                     });
-                    if(this.selTeacher.allType)
-                        this.selTeacher.teachers.push(i);
+                    if(this.selUser.allType)
+                        this.selUser.teachers.push(i);
                 }
                 this.getCourses();
             },

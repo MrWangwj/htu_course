@@ -20,6 +20,7 @@ class CreateNodesTable extends Migration
             $table->integer('pid')->comment('父节点id');
             $table->tinyInteger('depth')->comment('层级');
             $table->string('path', 30)->comment('路径');
+            $table->string('icon', 30)->comment('图标');
             $table->tinyInteger('type')->comment('类型：0 菜单，1，按钮， 1 api');
             $table->integer('sort_factor')->comment('排序规则');
             $table->tinyInteger('status')->comment('状态');

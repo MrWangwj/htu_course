@@ -2,13 +2,13 @@
     <div >
         <div style="margin-top: 20px;">
             <label >用户：</label>
-            <span>{{ teacher.name }}</span>
+            <span>{{ user.name }}</span>
         </div>
 
         <div>
             <div>
-                <el-button v-if="$route.path === '/teacher/course/type/two/'+$route.params.id" type="primary" @click="changeType('/teacher/course/type/one/'+$route.params.id)">格式一</el-button>
-                <el-button v-if="$route.path === '/teacher/course/type/one/'+$route.params.id || $route.path === '/teacher/course'" type="primary" @click="changeType('/teacher/course/type/two/'+$route.params.id)">格式二</el-button>
+                <el-button v-if="$route.path === '/user/course/type/two/'+$route.params.id" type="primary" @click="changeType('/user/course/type/one/'+$route.params.id)">格式一</el-button>
+                <el-button v-if="$route.path === '/user/course/type/one/'+$route.params.id || $route.path === '/user/course'" type="primary" @click="changeType('/user/course/type/two/'+$route.params.id)">格式二</el-button>
                 <el-button type="primary" @click="addCourseVisible = true">添加课程</el-button>
                 <el-button type="primary" @click="clearAllCourse">清除所有课表</el-button>
             </div>
@@ -64,9 +64,9 @@
                             <el-select v-model="newCourse.start_section"  placeholder="开始"  @change="startSectionChange(0)">
                                 <el-option :key="1" label="第1节" :value="1"></el-option>
                                 <el-option :key="3" label="第3节" :value="3"></el-option>
-                                <el-option :key="6" label="第6节" :value="6"></el-option>
-                                <el-option :key="8" label="第8节" :value="8"></el-option>
-                                <el-option :key="10" label="第10节" :value="10"></el-option>
+                                <el-option :key="5" label="第5节" :value="5"></el-option>
+                                <el-option :key="7" label="第7节" :value="7"></el-option>
+                                <el-option :key="9" label="第9节" :value="9"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -142,14 +142,11 @@
 </template>
 
 <script>
-
-
     export default {
-
         data() {
             return {
                 userId: 0,
-                teacher:{
+                user:{
                     name:'',
                 },
 
@@ -172,11 +169,8 @@
                     1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
                 ],
                 end_sections: [
-                    2,4,5,7,9,11,12
+                    2,4,6,8,10
                 ],
-
-
-
 
                 rules: {
                     name: [
@@ -212,13 +206,13 @@
         methods: {
             userInfo(){
                 this.userId = this.$route.params.id;
-                axios.post('/admin/teacher/course/get', {
+                axios.post('/admin/user/course/get', {
                     id: this.userId,
                 }).then(res => {
                     let data = res.data;
                     if(data.code === 1){
-                        this.teacher = data.data;
-                        this.courseInfos = this.teacher.courses;
+                        this.user = data.data;
+                        this.courseInfos = this.user.courses;
                         console.log(data);
                     }else{
                         this.$message.error(data.msg);
@@ -238,7 +232,6 @@
                     if(this.editCourse.end_section < this.editCourse.start_section) this.editCourse.end_section = '';
                 }
 
-
             },
 
             startWeekChange(type){
@@ -256,8 +249,7 @@
             addSubmit(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-
-                        axios.post('/admin/teacher/course/add',{
+                        axios.post('/admin/user/course/add',{
                             id:  this.userId,
                             name:       this.newCourse.name,
                             location:   this.newCourse.location,
@@ -297,7 +289,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    axios.post('/admin/teacher/course/clear',{
+                    axios.post('/admin/user/course/clear',{
                         'id': this.userId,
                     }).then(response => {
 //                            console.log(response.data);

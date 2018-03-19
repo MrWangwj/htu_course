@@ -11,22 +11,22 @@ export default new VueRouter({
         },
 
         {
-            path: '/teacher/info',
-            component: resolve => void(require(['../components/teacher/Info.vue'], resolve)),
+            path: '/user/info',
+            component: resolve => void(require(['../components/user/Info.vue'], resolve)),
         },
 
         {
-            path: '/teacher/course',
-            component: resolve => void(require(['../components/teacher/Course.vue'], resolve)),
+            path: '/user/course',
+            component: resolve => void(require(['../components/user/Course.vue'], resolve)),
             children: [
                 {
                     path: 'type/one/:id',
-                    component: resolve => void(require(['../components/teacher/Course1.vue'], resolve)),
+                    component: resolve => void(require(['../components/user/Course1.vue'], resolve)),
                     props: true,
                 },
                 {
                     path: 'type/two/:id',
-                    component: resolve => void(require(['../components/teacher/Course2.vue'], resolve)),
+                    component: resolve => void(require(['../components/user/Course2.vue'], resolve)),
                     props: true,
                 }
             ]
@@ -34,7 +34,7 @@ export default new VueRouter({
 
         {
             path: '/course/info',
-            component: resolve => void(require(['../components/teacher/Info.vue'], resolve)),
+            component: resolve => void(require(['../components/user/Info.vue'], resolve)),
         },
 
 
