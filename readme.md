@@ -1,7 +1,7 @@
 ## 教师课表管理系统
 #### 1. 克隆项目
 ```
-git clone git@github.com:MrWangwj/teacher_course.git
+git clone git@github.com:MrWangwj/htu_course.git
 ```
 #### 2. 生成 `.env` 文件
 ```
